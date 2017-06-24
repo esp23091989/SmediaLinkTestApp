@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MoviesTestApplication</string>
+    <string name="menu_item_popular">popular</string>
+    <string name="menu_item_top_rated">top rated</string>
+    <string name="menu_item_movies_type">movies type</string>
+    <string name="snackbar_text">loading error</string>
+    <string name="snackbar_try_again">try again</string>
+    <string name="picasso_base_url">http://image.tmdb.org/t/p</string>
+</resources>
