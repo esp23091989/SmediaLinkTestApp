@@ -9,7 +9,7 @@ public class Movie {
     private String overview;
     private Double voteAverage;
     private String posterPath;
-    private Date releaseDate;
+    private String releaseDate;
 
     public Integer getId() {
         return id;
@@ -51,11 +51,11 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 }

@@ -1,7 +1,5 @@
 package com.example.moviestestapplication.presentation.model;
 
-import java.util.Date;
-
 public class MovieModel {
 
     private Integer id;
@@ -9,7 +7,7 @@ public class MovieModel {
     private String overview;
     private Double voteAverage;
     private String posterPath;
-    private Date releaseDate;
+    private String releaseDate;
 
     public Integer getId() {
         return id;
@@ -51,11 +49,11 @@ public class MovieModel {
         this.posterPath = posterPath;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 }

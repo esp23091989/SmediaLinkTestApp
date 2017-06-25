@@ -6,4 +6,8 @@
     <string name="snackbar_text">loading error</string>
     <string name="snackbar_try_again">try again</string>
     <string name="picasso_base_url">http://image.tmdb.org/t/p</string>
+    <string name="error_movie_not_found">ошибка получения фильмов</string>
+    <string name="error_network">ошибка сети</string>
+    <string name="error_default">неизвестная ошибка</string>
+    <string name="erro_unauthorized">ошибка авторизации</string>
 </resources>

@@ -1,18 +1,13 @@
 package com.example.moviestestapplication.data.dto.mapper;
 
-import android.support.annotation.NonNull;
-
 import com.example.moviestestapplication.data.dto.MovieDTO;
 import com.example.moviestestapplication.data.dto.MoviesDataDTO;
+import com.example.moviestestapplication.data.exception.MoviesDataNotFoundException;
 import com.example.moviestestapplication.domain.Movie;
 import com.example.moviestestapplication.domain.MoviesData;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-
 import javax.inject.Inject;
 
 public class MoviesDataDTOMapper {
@@ -24,7 +19,11 @@ public class MoviesDataDTOMapper {
         this.movieDTOMapper = movieDTOMapper;
     }
 
-    public MoviesData transform(@NonNull MoviesDataDTO moviesDataDTO) throws ParseException {
+    public MoviesData transform(MoviesDataDTO moviesDataDTO){
+        if(moviesDataDTO == null){
+            throw new MoviesDataNotFoundException();
+        }
+
         MoviesData moviesData;
         moviesData = new MoviesData();
 
@@ -36,14 +35,14 @@ public class MoviesDataDTOMapper {
 
     }
 
-    private List<Movie> transformMoviesDTO(List<MovieDTO> moviesDTO) throws ParseException {
+    private List<Movie> transformMoviesDTO(List<MovieDTO> moviesDTO){
+        if(moviesDTO == null)
+            return Collections.emptyList();
+
         List<Movie> movies = new ArrayList<>();
-        if(moviesDTO != null && !moviesDTO.isEmpty()){
-            for(MovieDTO movieDTO : moviesDTO){
-                Movie movie = movieDTOMapper.transform(movieDTO);
-                if(movie != null)
-                    movies.add(movie);
-            }
+        for(MovieDTO movieDTO : moviesDTO){
+            Movie movie = movieDTOMapper.transform(movieDTO);
+                movies.add(movie);
         }
         return movies;
     }

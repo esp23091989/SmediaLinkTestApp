@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,8 +23,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public interface OnItemClickListener {
         void onMovieItemClicked(MovieModel movieModel);
     }
-
-    private static final String PICASSO_BASE_URL = "http://image.tmdb.org/t/p/w92";
 
     private List<MovieModel> movies;
     private final Context context;
@@ -50,7 +51,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         MovieModel movie = movies.get(position);
         holder.tvTitle.setText(movie.getTitle());
         holder.tvVoteAverage.setText(String.valueOf(movie.getVoteAverage()));
-        holder.tvDate.setText(dateFormat.format(movie.getReleaseDate()));
+        holder.tvDate.setText(getFormateDateString(movie.getReleaseDate()));
         holder.tvOverview.setText(movie.getOverview());
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
@@ -58,7 +59,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             }
         });
         loadPoster(movie.getPosterPath(),holder.ivPoster);
+    }
 
+    private String getFormateDateString(String releaseDate) {
+        String formatedDateString = "";
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).parse(releaseDate);
+            formatedDateString = dateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formatedDateString;
     }
 
     private void loadPoster(String posterPath, ImageView imageView){

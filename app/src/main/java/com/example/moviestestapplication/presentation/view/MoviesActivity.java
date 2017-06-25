@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.app.TheApp;
+import com.example.moviestestapplication.data.exception.MovieNotFoundException;
+import com.example.moviestestapplication.data.exception.MoviesDataNotFoundException;
 import com.example.moviestestapplication.presentation.di.components.DaggerMoviesActivityComponent;
 import com.example.moviestestapplication.presentation.di.components.MoviesActivityComponent;
 import com.example.moviestestapplication.presentation.model.MovieModel;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.HttpException;
 
 public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<MovieModel>,MoviesView,MoviesPresenter>
         implements MoviesView{
@@ -80,7 +83,19 @@ public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<Mo
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return e.getMessage();
+        if(e instanceof MovieNotFoundException || e instanceof MoviesDataNotFoundException) {
+            return getString(R.string.error_movie_not_found);
+        }else if(e instanceof HttpException) {
+            return getHttpExceptionErrorMessage((HttpException)e);
+        }
+        return getString(R.string.error_default);
+    }
+
+    private String getHttpExceptionErrorMessage(HttpException httpException) {
+        if(httpException.code() == 401){
+            return getString(R.string.erro_unauthorized);
+        }
+            return getString(R.string.error_network);
     }
 
     @NonNull
