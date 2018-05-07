@@ -1,12 +1,9 @@
 package com.example.moviestestapplication.presentation.presenter;
 
 import com.example.moviestestapplication.presentation.model.MovieModel;
-import com.example.moviestestapplication.presentation.view.MoviesView;
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 
-public interface MoviesPresenter extends MvpPresenter<MoviesView> {
 
-    void onStart();
+public interface MoviesPresenter {
 
     void onPopularOptionItemSelected();
 

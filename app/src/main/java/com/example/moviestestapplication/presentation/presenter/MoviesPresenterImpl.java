@@ -2,6 +2,8 @@ package com.example.moviestestapplication.presentation.presenter;
 
 import android.support.annotation.NonNull;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.example.moviestestapplication.domain.Movie;
 import com.example.moviestestapplication.domain.MoviesData;
 import com.example.moviestestapplication.domain.interactor.GetPopularMovies;
@@ -9,16 +11,13 @@ import com.example.moviestestapplication.domain.interactor.GetTopRatedMovies;
 import com.example.moviestestapplication.presentation.mapper.MovieModelDataMapper;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.example.moviestestapplication.presentation.view.MoviesView;
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import io.reactivex.observers.DisposableObserver;
 
-public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements MoviesPresenter{
-    
+@InjectViewState
+public class MoviesPresenterImpl extends MvpPresenter<MoviesView> implements MoviesPresenter{
+
     private static final String API_KEY = "739fbf641b9f6c591db3df89748f399f";
     private static final String LANGUAGE = "ru";
 
@@ -44,8 +43,9 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
     }
 
     @Override
-    public void onStart() {
-        loadPopularMovies();
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        loadMorePopularMovies();
     }
 
     @Override
@@ -78,9 +78,7 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
 
     @Override
     public void onMovieClicked(MovieModel movieModel) {
-        if(isViewAttached()){
-            getView().openDetailMovieView(movieModel.getId());
-        }
+        getViewState().openDetailMovieView(movieModel.getId());
     }
 
     private void loadMoreTopRatedMovies() {
@@ -88,7 +86,7 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
             DisposableObserver<MoviesData> loadMoreTopRatedMovies = createLoadMoreMoviesObserver();
 
             getTopRatedMoviesUseCase.execute(loadMoreTopRatedMovies,
-                new GetTopRatedMovies.RequestValue(API_KEY, LANGUAGE, currentPage + 1));
+                    new GetTopRatedMovies.RequestValue(API_KEY, LANGUAGE, currentPage + 1));
         }
 
     }
@@ -101,8 +99,7 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
     }
 
     private void loadPopularMovies() {
-        if(isViewAttached())
-            getView().showLoading(false);
+        getViewState().showLoading(true);
 
         DisposableObserver<MoviesData>  getPopularMoviesObserver = createMoviesObserver();
 
@@ -111,8 +108,7 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
     }
 
     private void loadTopRatedMovies(){
-        if(isViewAttached())
-            getView().showLoading(false);
+        getViewState().showLoading(true);
 
         DisposableObserver<MoviesData>  getTopRatedMoviesObserver = createMoviesObserver();
 
@@ -130,14 +126,13 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
 
             @Override
             public void onError(Throwable e) {
-                if(isViewAttached())
-                    getView().showError(e,false);
+                getViewState().showLoading(false);
+                getViewState().showError(e);
             }
 
             @Override
             public void onComplete() {
-                if(isViewAttached())
-                    getView().showContent();
+                getViewState().showLoading(false);
             }
         };
     }
@@ -152,14 +147,12 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
 
             @Override
             public void onError(Throwable e) {
-                if(isViewAttached())
-                    getView().showLoadMoreError();
+                getViewState().showLoadMoreError();
             }
 
             @Override
             public void onComplete() {
-                if(isViewAttached())
-                    getView().showContent();
+                getViewState().showLoading(false);
             }
         };
     }
@@ -167,21 +160,19 @@ public class MoviesPresenterImpl extends MvpBasePresenter<MoviesView> implements
     private void addMoviesListInView(List<Movie> movies){
         List<MovieModel> movieModelList = movieModelDataMapper.transform(movies);
 
-        if(isViewAttached())
-            getView().addData(movieModelList);
+        getViewState().addData(movieModelList);
     }
 
     private void showMoviesListInView(List<Movie> movies) {
         List<MovieModel> movieModelList = movieModelDataMapper.transform(movies);
-
-        if(isViewAttached()){
-            getView().setData(movieModelList);
-        }
+        getViewState().setData(movieModelList);
     }
 
     private void initPaginationFields(@NonNull MoviesData moviesData) {
         this.currentPage = moviesData.getPage();
         this.totalPages = moviesData.getTotalPages();
     }
+
+
 
 }

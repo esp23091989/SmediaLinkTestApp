@@ -1,7 +1,6 @@
 package com.example.moviestestapplication.presentation.view;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,30 +9,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.arellomobile.mvp.MvpActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.app.TheApp;
-import com.example.moviestestapplication.data.exception.MovieNotFoundException;
-import com.example.moviestestapplication.data.exception.MoviesDataNotFoundException;
 import com.example.moviestestapplication.presentation.di.components.DaggerMoviesActivityComponent;
 import com.example.moviestestapplication.presentation.di.components.MoviesActivityComponent;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
 import com.example.moviestestapplication.presentation.view.adapters.MoviesAdapter;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.AbsLceViewState;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.HttpException;
 
-public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<MovieModel>,MoviesView,MoviesPresenter>
-        implements MoviesView{
+public class MoviesActivity extends MvpActivity implements MoviesView{
 
     @BindView(R.id.contentView) RecyclerView rvMovies;
+    @InjectPresenter
+    MoviesPresenter presenter;
 
     private MoviesActivityComponent component;
     private MoviesAdapter adapter;
@@ -70,40 +66,6 @@ public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<Mo
         adapter.setOnItemClickListener(onItemClickListener);
     }
 
-    @NonNull
-    @Override
-    public MoviesPresenter createPresenter() {
-        return component.getPresenter();
-    }
-
-    @Override
-    public List<MovieModel> getData() {
-        return adapter.getMovies();
-    }
-
-    @Override
-    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        if(e instanceof MovieNotFoundException || e instanceof MoviesDataNotFoundException) {
-            return getString(R.string.error_movie_not_found);
-        }else if(e instanceof HttpException) {
-            return getHttpExceptionErrorMessage((HttpException)e);
-        }
-        return getString(R.string.error_default);
-    }
-
-    private String getHttpExceptionErrorMessage(HttpException httpException) {
-        if(httpException.code() == 401){
-            return getString(R.string.erro_unauthorized);
-        }
-            return getString(R.string.error_network);
-    }
-
-    @NonNull
-    @Override
-    public LceViewState<List<MovieModel>, MoviesView> createViewState() {
-        return new AbsLceViewState<List<MovieModel>, MoviesView>(){};
-    }
-
     @Override
     public void setData(List<MovieModel> data) {
         adapter.setMovies(data);
@@ -130,10 +92,6 @@ public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<Mo
         startActivity(intent);
     }
 
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        presenter.onStart();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -179,4 +137,14 @@ public class MoviesActivity extends MvpLceViewStateActivity<RecyclerView,List<Mo
             }
         }
     };
+
+    @Override
+    public void showError(Throwable e) {
+
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
+    }
 }
