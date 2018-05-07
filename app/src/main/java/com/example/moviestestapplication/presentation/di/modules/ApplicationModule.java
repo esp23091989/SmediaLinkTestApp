@@ -10,7 +10,6 @@ import com.example.moviestestapplication.data.repository.datasource.MoviesDataSt
 import com.example.moviestestapplication.data.repository.datasource.RemoteMoviesDataStore;
 import com.example.moviestestapplication.domain.repository.MovieRepository;
 import com.example.moviestestapplication.domain.repository.MoviesDataRepository;
-import com.example.moviestestapplication.presentation.delegate.LoadingDelegate;
 
 import javax.inject.Named;
 import javax.inject.Singleton;

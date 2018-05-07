@@ -1,6 +1,5 @@
 package com.example.moviestestapplication.presentation.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,10 +10,13 @@ import android.view.MenuItem;
 
 import com.arellomobile.mvp.MvpActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.app.TheApp;
+import com.example.moviestestapplication.presentation.delegate.LCEDelegate;
 import com.example.moviestestapplication.presentation.di.components.DaggerMoviesActivityComponent;
 import com.example.moviestestapplication.presentation.di.components.MoviesActivityComponent;
+import com.example.moviestestapplication.presentation.di.modules.MoviesActivityModule;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
 import com.example.moviestestapplication.presentation.view.adapters.MoviesAdapter;
@@ -22,19 +24,34 @@ import com.example.moviestestapplication.presentation.view.adapters.MoviesAdapte
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesActivity extends MvpActivity implements MoviesView{
 
-    @BindView(R.id.contentView) RecyclerView rvMovies;
+    @BindView(R.id.contentView)
+    RecyclerView rvMovies;
+
     @InjectPresenter
+    @Inject
     MoviesPresenter presenter;
+
+    @Inject
+    Provider<LCEDelegate> lceDelegate;
 
     private MoviesActivityComponent component;
     private MoviesAdapter adapter;
     private GridLayoutManager layoutManager;
     private boolean loading = true;
+
+
+    @ProvidePresenter
+    public MoviesPresenter providePresenter(){
+        return presenter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +64,7 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
 
     private void buildGraph(){
         component = DaggerMoviesActivityComponent.builder()
+                .moviesActivityModule(new MoviesActivityModule(this))
                 .applicationComponent(((TheApp) getApplication()).getComponent())
                 .build();
         component.inject(this);
@@ -86,10 +104,10 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
 
     @Override
     public void openDetailMovieView(Integer id) {
-        Intent intent = new Intent(this, DetailsMovieActivity.class);
-        intent.putExtra(DetailsMovieActivity.EXTRA_MOVIE_ID,id);
-
-        startActivity(intent);
+//        Intent intent = new Intent(this, DetailsMovieActivity.class);
+//        intent.putExtra(DetailsMovieActivity.EXTRA_MOVIE_ID,id);
+//
+//        startActivity(intent);
     }
 
 
@@ -140,11 +158,16 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
 
     @Override
     public void showError(Throwable e) {
-
+        lceDelegate.get().showError(e);
     }
 
     @Override
-    public void showLoading(boolean isShow) {
+    public void showLoading() {
+        lceDelegate.get().showLoading();
+    }
 
+    @Override
+    public void showContent() {
+        lceDelegate.get().showContent();
     }
 }

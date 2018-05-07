@@ -1,5 +1,7 @@
 package com.example.moviestestapplication.presentation.di.components;
 
+import android.content.Context;
+
 import com.example.moviestestapplication.app.TheApp;
 import com.example.moviestestapplication.data.api.ApiInterface;
 import com.example.moviestestapplication.data.repository.datasource.MoviesDataStore;
@@ -31,6 +33,8 @@ public interface ApplicationComponent {
     MoviesDataStore getMoviesDataStore();
 
     ApiInterface getApiInterface();
+
+    Context getContext();
 
     void inject(TheApp app);
 }

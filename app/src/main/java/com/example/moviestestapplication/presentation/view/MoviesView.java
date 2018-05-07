@@ -1,13 +1,14 @@
 package com.example.moviestestapplication.presentation.view;
 
 import com.arellomobile.mvp.MvpView;
-import com.example.moviestestapplication.domain.Movie;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.example.moviestestapplication.presentation.model.MovieModel;
-import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
 
 import java.util.List;
 
-public interface MoviesView extends MvpView, CanShowError, CanShowLoading {
+@StateStrategyType(AddToEndSingleStrategy.class)
+public interface MoviesView extends MvpView, LCEView {
 
     void setData(List<MovieModel> data);
 
