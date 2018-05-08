@@ -15,6 +15,4 @@ public interface MoviesView extends MvpView, LCEView {
     void addData(List<MovieModel> data);
 
     void showLoadMoreError();
-
-    void openDetailMovieView(Integer id);
 }

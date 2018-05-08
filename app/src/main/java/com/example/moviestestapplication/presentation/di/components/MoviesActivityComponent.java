@@ -6,10 +6,11 @@ import com.example.moviestestapplication.presentation.di.modules.MoviesActivityM
 import com.example.moviestestapplication.presentation.di.scope.PerActivity;
 
 import dagger.Component;
+import ru.terrakok.cicerone.Router;
 
 @PerActivity
 @Component(modules = MoviesActivityModule.class, dependencies = ApplicationComponent.class)
-public interface MoviesActivityComponent {
+public interface MoviesActivityComponent extends HasMoviesAdapterDepenedencies {
 
     void inject(MoviesActivity moviesActivity);
 }

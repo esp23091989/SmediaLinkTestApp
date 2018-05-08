@@ -1,14 +1,21 @@
 package com.example.moviestestapplication.presentation.view.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.arellomobile.mvp.MvpDelegate;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.moviestestapplication.R;
+import com.example.moviestestapplication.presentation.di.components.DaggerMoviesAdapterComponent;
+import com.example.moviestestapplication.presentation.di.components.HasMoviesAdapterDepenedencies;
 import com.example.moviestestapplication.presentation.model.MovieModel;
+import com.example.moviestestapplication.presentation.view.HasComponent;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -17,27 +24,59 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
 
-    public interface OnItemClickListener {
-        void onMovieItemClicked(MovieModel movieModel);
-    }
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> implements MoviesAdapterView{
 
     private List<MovieModel> movies;
-    private final Context context;
+    private final Activity activity;
     private final SimpleDateFormat dateFormat;
+    private MvpDelegate<? extends MoviesAdapter> mMvpDelegate;
+    private MvpDelegate<?> parentDelegate;
+    HasMoviesAdapterDepenedencies parentComponent;
 
-    private OnItemClickListener onItemClickListener;
+    @InjectPresenter
+    @Inject
+    MoviesAdapterPresenter presenter;
 
-    public MoviesAdapter(Context context, List<MovieModel> movies) {
-        this.context = context;
-        this.movies = movies;
-        dateFormat = new SimpleDateFormat("d MMM yy", Locale.ENGLISH);
+    @ProvidePresenter
+    public MoviesAdapterPresenter providePresenter(){
+        return presenter;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public MoviesAdapter(MvpDelegate<?> parentDelegate, Activity activity, List<MovieModel> movies) {
+        this.parentDelegate = parentDelegate;
+        this.activity = activity;
+        this.movies = movies;
+        dateFormat = new SimpleDateFormat("d MMM yy", Locale.ENGLISH);
+        initParentComponent();
+        buildGraph();
+        getMvpDelegate().onCreate();
+    }
+
+    private void initParentComponent() {
+        if(activity instanceof HasComponent)
+            parentComponent = (HasMoviesAdapterDepenedencies)((HasComponent) activity).getComponent();
+        else {
+            throw new RuntimeException("activity must implements HasComponent<HasMoviesAdapterDependencies>");
+        }
+
+    }
+
+    private MvpDelegate getMvpDelegate() {
+        if(mMvpDelegate == null){
+            mMvpDelegate = new MvpDelegate<>(this);
+            mMvpDelegate.setParentDelegate(parentDelegate, "");
+        }
+        return mMvpDelegate;
+    }
+
+    private void buildGraph() {
+        DaggerMoviesAdapterComponent.builder()
+                .hasMoviesAdapterDepenedencies(parentComponent)
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -54,9 +93,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         holder.tvDate.setText(getFormateDateString(movie.getReleaseDate()));
         holder.tvOverview.setText(movie.getOverview());
         holder.itemView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                onItemClickListener.onMovieItemClicked(movie);
-            }
+            presenter.movieClicked(movie.getId());
         });
         loadPoster(movie.getPosterPath(),holder.ivPoster);
     }
@@ -73,8 +110,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     private void loadPoster(String posterPath, ImageView imageView){
-        String picassoBaseUrl = context.getString(R.string.picasso_base_url);
-        Picasso.with(context).load(picassoBaseUrl + "/w92" + posterPath)
+        String picassoBaseUrl = activity.getString(R.string.picasso_base_url);
+        Picasso.with(activity).load(picassoBaseUrl + "/w92" + posterPath)
                 .fit()
                 .into(imageView);
     }

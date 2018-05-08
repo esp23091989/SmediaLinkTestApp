@@ -1,7 +1,10 @@
 package com.example.moviestestapplication.presentation.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -9,15 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.arellomobile.mvp.MvpActivity;
+import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.app.TheApp;
+import com.example.moviestestapplication.navigation.Screens;
 import com.example.moviestestapplication.presentation.delegate.LCEDelegate;
 import com.example.moviestestapplication.presentation.di.components.DaggerMoviesActivityComponent;
+import com.example.moviestestapplication.presentation.di.components.HasMoviesAdapterDepenedencies;
 import com.example.moviestestapplication.presentation.di.components.MoviesActivityComponent;
 import com.example.moviestestapplication.presentation.di.modules.MoviesActivityModule;
 import com.example.moviestestapplication.presentation.model.MovieModel;
+import com.example.moviestestapplication.presentation.presenter.DetailsMoviePresenter;
 import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
 import com.example.moviestestapplication.presentation.view.adapters.MoviesAdapter;
 
@@ -29,8 +36,10 @@ import javax.inject.Provider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.terrakok.cicerone.NavigatorHolder;
+import ru.terrakok.cicerone.android.SupportAppNavigator;
 
-public class MoviesActivity extends MvpActivity implements MoviesView{
+public class MoviesActivity extends MvpAppCompatActivity implements MoviesView, HasComponent<HasMoviesAdapterDepenedencies>{
 
     @BindView(R.id.contentView)
     RecyclerView rvMovies;
@@ -41,6 +50,27 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
 
     @Inject
     Provider<LCEDelegate> lceDelegate;
+
+    @Inject
+    NavigatorHolder navigatorHolder;
+
+    SupportAppNavigator navigator = new SupportAppNavigator(this, 0) {
+        @Override
+        protected Intent createActivityIntent(Context context, String screenKey, Object data) {
+            switch (screenKey){
+                case Screens.DETAILS_MOVIE_SCREEN:
+                    Intent intent = new Intent(context, DetailsMovieActivity.class);
+                    intent.putExtra(DetailsMovieActivity.EXTRA_MOVIE_ID,(int) data);
+                    return intent;
+            }
+            return null;
+        }
+
+        @Override
+        protected Fragment createFragment(String screenKey, Object data) {
+            return null;
+        }
+    };
 
     private MoviesActivityComponent component;
     private MoviesAdapter adapter;
@@ -62,6 +92,18 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
         initRecyclerView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigatorHolder.setNavigator(navigator);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        navigatorHolder.removeNavigator();
+    }
+
     private void buildGraph(){
         component = DaggerMoviesActivityComponent.builder()
                 .moviesActivityModule(new MoviesActivityModule(this))
@@ -80,9 +122,10 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
     }
 
     private void initAdapter(){
-        adapter = new MoviesAdapter(this,new ArrayList<>());
-        adapter.setOnItemClickListener(onItemClickListener);
+        adapter = new MoviesAdapter(getMvpDelegate(), this,new ArrayList<>());
     }
+
+
 
     @Override
     public void setData(List<MovieModel> data) {
@@ -103,15 +146,6 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
     }
 
     @Override
-    public void openDetailMovieView(Integer id) {
-//        Intent intent = new Intent(this, DetailsMovieActivity.class);
-//        intent.putExtra(DetailsMovieActivity.EXTRA_MOVIE_ID,id);
-//
-//        startActivity(intent);
-    }
-
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
@@ -130,13 +164,6 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
 
         return super.onOptionsItemSelected(item);
     }
-
-    private final MoviesAdapter.OnItemClickListener onItemClickListener = new MoviesAdapter.OnItemClickListener() {
-        @Override
-        public void onMovieItemClicked(MovieModel movieModel) {
-            presenter.onMovieClicked(movieModel);
-        }
-    };
 
     private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -169,5 +196,10 @@ public class MoviesActivity extends MvpActivity implements MoviesView{
     @Override
     public void showContent() {
         lceDelegate.get().showContent();
+    }
+
+    @Override
+    public HasMoviesAdapterDepenedencies getComponent() {
+        return component;
     }
 }

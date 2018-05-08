@@ -8,15 +8,18 @@ import com.example.moviestestapplication.data.repository.datasource.MoviesDataSt
 import com.example.moviestestapplication.domain.repository.MovieRepository;
 import com.example.moviestestapplication.domain.repository.MoviesDataRepository;
 import com.example.moviestestapplication.presentation.di.modules.ApplicationModule;
+import com.example.moviestestapplication.presentation.di.modules.CiceroneModule;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
 import io.reactivex.Scheduler;
+import ru.terrakok.cicerone.NavigatorHolder;
+import ru.terrakok.cicerone.Router;
 
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = {ApplicationModule.class, CiceroneModule.class})
 public interface ApplicationComponent {
 
     @Named("ThreadScheduler")
@@ -35,6 +38,10 @@ public interface ApplicationComponent {
     ApiInterface getApiInterface();
 
     Context getContext();
+
+    Router getRouter();
+
+    NavigatorHolder getNavigatorHolder();
 
     void inject(TheApp app);
 }

@@ -8,12 +8,14 @@ import com.example.moviestestapplication.domain.Movie;
 import com.example.moviestestapplication.domain.MoviesData;
 import com.example.moviestestapplication.domain.interactor.GetPopularMovies;
 import com.example.moviestestapplication.domain.interactor.GetTopRatedMovies;
+import com.example.moviestestapplication.navigation.Screens;
 import com.example.moviestestapplication.presentation.mapper.MovieModelDataMapper;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.example.moviestestapplication.presentation.view.MoviesView;
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.observers.DisposableObserver;
+import ru.terrakok.cicerone.Router;
 
 @InjectViewState
 public class MoviesPresenter extends MvpPresenter<MoviesView> {
@@ -21,6 +23,7 @@ public class MoviesPresenter extends MvpPresenter<MoviesView> {
     private static final String API_KEY = "739fbf641b9f6c591db3df89748f399f";
     private static final String LANGUAGE = "ru";
 
+    private final Router router;
     private final GetPopularMovies getPopularMoviesUseCase;
     private final GetTopRatedMovies getTopRatedMoviesUseCase;
     private final MovieModelDataMapper movieModelDataMapper;
@@ -34,9 +37,11 @@ public class MoviesPresenter extends MvpPresenter<MoviesView> {
     }
 
     @Inject
-    MoviesPresenter(GetPopularMovies getPopularMoviesUseCase,
+    MoviesPresenter(Router router,
+                    GetPopularMovies getPopularMoviesUseCase,
                     GetTopRatedMovies getTopRatedMoviesUseCase,
                     MovieModelDataMapper movieModelDataMapper) {
+        this.router = router;
         this.getPopularMoviesUseCase = getPopularMoviesUseCase;
         this.getTopRatedMoviesUseCase = getTopRatedMoviesUseCase;
         this.movieModelDataMapper = movieModelDataMapper;
@@ -74,7 +79,7 @@ public class MoviesPresenter extends MvpPresenter<MoviesView> {
     }
 
     public void onMovieClicked(MovieModel movieModel) {
-        getViewState().openDetailMovieView(movieModel.getId());
+        router.navigateTo(Screens.DETAILS_MOVIE_SCREEN, movieModel.getId());
     }
 
     private void loadMoreTopRatedMovies() {

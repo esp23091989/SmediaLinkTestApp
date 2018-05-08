@@ -1,24 +1,33 @@
-//package com.example.moviestestapplication.presentation.di.modules;
-//
-//import com.example.moviestestapplication.presentation.di.scope.PerActivity;
-//import com.example.moviestestapplication.presentation.presenter.DetailsMoviePresenter;
-//import com.example.moviestestapplication.presentation.presenter.DetailsMoviePresenterImpl;
-//import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
-//import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
-//
-//import dagger.Module;
-//import dagger.Provides;
-//
-///**
-// * Created by Юленька on 24.06.2017.
-// */
-//
-//@Module
-//public class DetailsMovieActivityModule {
-//
-//    @Provides
-//    @PerActivity
-//    DetailsMoviePresenter providePresenter(DetailsMoviePresenterImpl presenter){
-//        return presenter;
-//    }
-//}
+package com.example.moviestestapplication.presentation.di.modules;
+
+import android.view.View;
+
+import com.example.moviestestapplication.R;
+import com.example.moviestestapplication.presentation.di.scope.PerActivity;
+import com.example.moviestestapplication.presentation.view.DetailsMovieActivity;
+
+import dagger.Module;
+import dagger.Provides;
+
+@Module
+public class DetailsMovieActivityModule {
+
+    private DetailsMovieActivity activity;
+
+    public DetailsMovieActivityModule(DetailsMovieActivity activity) {
+        this.activity = activity;
+    }
+
+    @PerActivity
+    @Provides
+    Integer provideMovieId(){
+        return activity.obtainMovieId();
+    }
+
+    @PerActivity
+    @Provides
+    View providesRootView(){
+        return activity.findViewById(R.id.rootView);
+    }
+
+}

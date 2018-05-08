@@ -1,10 +1,16 @@
-//package com.example.moviestestapplication.presentation.view;
-//
-//import com.example.moviestestapplication.presentation.model.MovieModel;
-//import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
-//
-///**
-// * Created by Юленька on 24.06.2017.
-// */
-//public interface DetailsMovieView extends MvpLceView<MovieModel>{
-//}
+package com.example.moviestestapplication.presentation.view;
+
+import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
+import com.example.moviestestapplication.presentation.model.MovieModel;
+
+/**
+ * Created by Юленька on 24.06.2017.
+ */
+
+@StateStrategyType(AddToEndSingleStrategy.class)
+public interface DetailsMovieView extends MvpView, LCEView {
+
+    public void setData(MovieModel movieModel);
+}
