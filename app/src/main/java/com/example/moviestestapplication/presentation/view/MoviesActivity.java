@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.arellomobile.mvp.MvpActivity;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.moviestestapplication.R;
 import com.example.moviestestapplication.app.TheApp;
@@ -25,6 +26,7 @@ import com.example.moviestestapplication.presentation.di.components.MoviesActivi
 import com.example.moviestestapplication.presentation.di.modules.MoviesActivityModule;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 import com.example.moviestestapplication.presentation.presenter.DetailsMoviePresenter;
+import com.example.moviestestapplication.presentation.presenter.Movies1Presenter;
 import com.example.moviestestapplication.presentation.presenter.MoviesPresenter;
 import com.example.moviestestapplication.presentation.view.adapters.MoviesAdapter;
 
@@ -47,6 +49,10 @@ public class MoviesActivity extends MvpAppCompatActivity implements MoviesView, 
     @InjectPresenter
     @Inject
     MoviesPresenter presenter;
+
+    @InjectPresenter(type = PresenterType.GLOBAL)
+    @Inject
+    Movies1Presenter presenter1;
 
     @Inject
     Provider<LCEDelegate> lceDelegate;

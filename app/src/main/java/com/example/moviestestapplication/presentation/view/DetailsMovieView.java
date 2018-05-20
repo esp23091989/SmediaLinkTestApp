@@ -12,5 +12,5 @@ import com.example.moviestestapplication.presentation.model.MovieModel;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface DetailsMovieView extends MvpView, LCEView {
 
-    public void setData(MovieModel movieModel);
+    void setData(MovieModel movieModel);
 }
