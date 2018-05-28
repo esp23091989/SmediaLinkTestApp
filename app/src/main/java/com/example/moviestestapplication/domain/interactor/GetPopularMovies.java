@@ -1,6 +1,9 @@
 package com.example.moviestestapplication.domain.interactor;
 
+import android.arch.lifecycle.LiveData;
+
 import com.example.moviestestapplication.domain.MoviesData;
+import com.example.moviestestapplication.domain.Resource;
 import com.example.moviestestapplication.domain.repository.MoviesDataRepository;
 
 import javax.inject.Inject;
@@ -9,20 +12,18 @@ import javax.inject.Named;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
-public class GetPopularMovies extends UseCase<MoviesData,GetPopularMovies.RequestValue> {
+public class GetPopularMovies extends LDUseCase<Resource<MoviesData>,GetPopularMovies.RequestValue> {
 
     private final MoviesDataRepository repository;
 
     @Inject
-    GetPopularMovies(@Named("ThreadScheduler") Scheduler threadScheduler,
-                     @Named("PostScheduler") Scheduler postScheduler,
-                     MoviesDataRepository repository) {
-        super(threadScheduler, postScheduler);
+    GetPopularMovies(MoviesDataRepository repository) {
+        super();
         this.repository = repository;
     }
 
     @Override
-    Observable<MoviesData> buildUseCaseObservable(RequestValue requestValue) {
+    LiveData<Resource<MoviesData>> buildUseCaseObservable(RequestValue requestValue) {
         return repository.getPopular(requestValue.getApiKey(), requestValue.getLanguage(), requestValue.getPage());
     }
 

@@ -50,18 +50,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         this.activity = activity;
         this.movies = movies;
         dateFormat = new SimpleDateFormat("d MMM yy", Locale.ENGLISH);
-        initParentComponent();
-        buildGraph();
+//        buildGraph();
         getMvpDelegate().onCreate();
-    }
-
-    private void initParentComponent() {
-        if(activity instanceof HasComponent)
-            parentComponent = (HasMoviesAdapterDepenedencies)((HasComponent) activity).getComponent();
-        else {
-            throw new RuntimeException("activity must implements HasComponent<HasMoviesAdapterDependencies>");
-        }
-
     }
 
     private MvpDelegate getMvpDelegate() {
@@ -72,12 +62,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         return mMvpDelegate;
     }
 
-    private void buildGraph() {
-        DaggerMoviesAdapterComponent.builder()
-                .hasMoviesAdapterDepenedencies(parentComponent)
-                .build()
-                .inject(this);
-    }
+//    private void buildGraph() {
+//        DaggerMoviesAdapterComponent.builder()
+//                .hasMoviesAdapterDepenedencies(parentComponent)
+//                .build()
+//                .inject(this);
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -93,7 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         holder.tvDate.setText(getFormateDateString(movie.getReleaseDate()));
         holder.tvOverview.setText(movie.getOverview());
         holder.itemView.setOnClickListener(v -> {
-            presenter.movieClicked(movie.getId());
+//            presenter.movieClicked(movie.getId());
         });
         loadPoster(movie.getPosterPath(),holder.ivPoster);
     }

@@ -41,6 +41,12 @@ public class LCEDelegate {
         updateViewState();
     }
 
+    public void showError(String message){
+        errorView.setText(message);
+        lceState = LCEState.SHOW_ERROR_STATE;
+        updateViewState();
+    }
+
     public void showContent(){
         lceState = LCEState.SHOW_CONTENT_STATE;
         updateViewState();

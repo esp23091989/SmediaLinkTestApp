@@ -1,5 +1,7 @@
 package com.example.moviestestapplication.data.api;
 
+import com.example.moviestestapplication.util.LiveDataCallAdapterFactory;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -17,6 +19,7 @@ public final class ApiModule {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .client(httpClient.build())
                 .build();
 

@@ -1,12 +1,20 @@
 package com.example.moviestestapplication.app;
 
+import android.app.Activity;
 import android.app.Application;
-import com.example.moviestestapplication.presentation.di.components.ApplicationComponent;
-import com.example.moviestestapplication.presentation.di.components.DaggerApplicationComponent;
-import com.example.moviestestapplication.presentation.di.modules.ApplicationModule;
 
-public class TheApp extends Application{
-    private ApplicationComponent component;
+import com.example.moviestestapplication.presentation.di.components.DaggerAppComponent;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
+
+public class TheApp extends Application implements HasActivityInjector {
+
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
@@ -15,14 +23,14 @@ public class TheApp extends Application{
     }
 
     private void buildGraph(){
-        component = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(getApplicationContext()))
-                .build();
-
-        component.inject(this);
+        DaggerAppComponent.builder()
+                .application(this)
+                .build()
+                .inject(this);
     }
 
-    public ApplicationComponent getComponent(){
-        return component;
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 }
