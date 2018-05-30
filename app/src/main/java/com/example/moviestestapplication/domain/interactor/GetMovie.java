@@ -25,6 +25,7 @@ public class GetMovie extends UseCase<Movie,GetMovie.RequestValue>{
         this.repository = repository;
     }
 
+    //todo Сами кейсы для этого примера лишние, я бы напрямую репозиторий использовал
     @Override
     Observable<Movie> buildUseCaseObservable(RequestValue requestValue) {
         return repository.getMovieById(requestValue.getApiKey(), requestValue.getLanguage(), requestValue.getMovieId());
@@ -34,7 +35,7 @@ public class GetMovie extends UseCase<Movie,GetMovie.RequestValue>{
         private final String apiKey;
         private final String language;
         private final int movieId;
-
+        //todo api key  не должен лежать в домене, это специфика дата слоя. Здесь получается, что мы неявно знаем о том, что берем данные у какого апи, а если нам нужно из БД?
         public RequestValue(String apiKey, String language, int movieId) {
             this.apiKey = apiKey;
             this.language = language;

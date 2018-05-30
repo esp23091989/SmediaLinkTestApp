@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
-
+    //todo здесь можно просто path объявить и передавать параметры: popular или top_rated
     @GET("movie/popular")
     Observable<MoviesDataDTO> getPopularMovies(@Query("api_key") String apiKey,
                                                @Query("language") String language,

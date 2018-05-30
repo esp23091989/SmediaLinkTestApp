@@ -1,5 +1,6 @@
 package com.example.moviestestapplication.presentation.model;
 
+//todo presentation модели лишние, можно напрямую доменные использовать
 public class MovieModel {
 
     private Integer id;

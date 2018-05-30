@@ -17,6 +17,7 @@ import io.reactivex.observers.DisposableObserver;
  */
 public class DetailsMoviePresenterImpl extends MvpBasePresenter<DetailsMovieView> implements DetailsMoviePresenter{
 
+    //todo Неудачное место для хранения API_KEY и LANGUAGE. В ресурсах будет лучше
     private static final String API_KEY = "739fbf641b9f6c591db3df89748f399f";
     private static final String LANGUAGE = "ru";
 

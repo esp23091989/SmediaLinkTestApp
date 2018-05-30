@@ -24,6 +24,7 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
+    //todo Почему не квалификаторы?
     @Named("ThreadScheduler")
     Scheduler provideThreadScheduler(){
         return Schedulers.io();

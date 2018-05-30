@@ -19,6 +19,7 @@ public class MoviesDataDTOMapper {
         this.movieDTOMapper = movieDTOMapper;
     }
 
+    //todo смотри MovieDTOMapper
     public MoviesData transform(MoviesDataDTO moviesDataDTO){
         if(moviesDataDTO == null){
             throw new MoviesDataNotFoundException();

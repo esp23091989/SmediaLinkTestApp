@@ -12,6 +12,7 @@ import dagger.Component;
  * Created by Юленька on 24.06.2017.
  */
 
+//todo Почему dependencies? Проще с сабкомпонентом
 @PerActivity
 @Component(modules = DetailsMovieActivityModule.class, dependencies = ApplicationComponent.class)
 public interface DetailsMovieActivityComponent {

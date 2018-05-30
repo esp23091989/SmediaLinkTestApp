@@ -20,6 +20,7 @@ public class MovieDTOMapper {
     MovieDTOMapper() {
     }
 
+    //todo здесь аннотация @NonNull обязательно. Непонятно что нельзя передавать null
     public Movie transform(MovieDTO movieDTO){
         if(movieDTO == null){
             throw new MovieNotFoundException();
