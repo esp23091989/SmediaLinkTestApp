@@ -1,5 +1,7 @@
 package com.example.moviestestapplication.presentation.di.modules;
 
+import android.content.Context;
+
 import com.example.moviestestapplication.data.api.ApiInterface;
 import com.example.moviestestapplication.data.api.ApiModule;
 import com.example.moviestestapplication.data.repository.MovieRepositoryImpl;
@@ -21,6 +23,18 @@ import io.reactivex.schedulers.Schedulers;
 
 @Module
 public class ApplicationModule {
+
+    private Context context;
+
+    public ApplicationModule(Context context) {
+        this.context = context;
+    }
+
+    @Singleton
+    @Provides
+    Context provideContext(){
+        return context;
+    }
 
     @Singleton
     @Provides
@@ -61,4 +75,5 @@ public class ApplicationModule {
     MoviesDataStore provideRemoteDataStore(RemoteMoviesDataStore remoteMoviesDataStore){
         return remoteMoviesDataStore;
     }
+
 }
