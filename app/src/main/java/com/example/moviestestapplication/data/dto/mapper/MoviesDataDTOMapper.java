@@ -19,19 +19,12 @@ public class MoviesDataDTOMapper {
         this.movieDTOMapper = movieDTOMapper;
     }
 
-    public MoviesData transform(MoviesDataDTO moviesDataDTO){
+    public List<Movie> transform(MoviesDataDTO moviesDataDTO){
         if(moviesDataDTO == null){
             throw new MoviesDataNotFoundException();
         }
 
-        MoviesData moviesData;
-        moviesData = new MoviesData();
-
-        moviesData.setPage(moviesDataDTO.getPage());
-        moviesData.setTotalPages(moviesDataDTO.getTotalPages());
-        moviesData.setMovies(transformMoviesDTO(moviesDataDTO.getMovies()));
-
-        return moviesData;
+        return transformMoviesDTO(moviesDataDTO.getMovies());
 
     }
 

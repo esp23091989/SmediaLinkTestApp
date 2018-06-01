@@ -8,13 +8,10 @@ import com.example.moviestestapplication.data.dto.MoviesDataDTO;
 import com.example.moviestestapplication.domain.Movie;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 public interface MoviesDataStore {
-
-    LiveData<ApiResponse<MoviesDataDTO>> getPopularMoviesDataDTO(String apiKey, String language, Integer page);
-
-    Observable<MoviesDataDTO> getTopRatedMoviesDataDTO(String apiKey, String language, Integer page);
-
-    Observable<MovieDTO> getMovie(String apiKey, String language, int movieId);
+    LiveData<ApiResponse<MoviesDataDTO>> getMovies();
 }

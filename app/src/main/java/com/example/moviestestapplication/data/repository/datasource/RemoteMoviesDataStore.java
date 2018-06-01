@@ -12,12 +12,15 @@ import com.example.moviestestapplication.domain.MoviesData;
 import com.example.moviestestapplication.domain.Resource;
 import com.example.moviestestapplication.presentation.model.MovieModel;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
 public class RemoteMoviesDataStore implements MoviesDataStore{
     private final ApiInterface apiInterface;
+    private static final String API_KEY = "739fbf641b9f6c591db3df89748f399f";
 
     @Inject
     RemoteMoviesDataStore(ApiInterface apiInterface) {
@@ -25,18 +28,8 @@ public class RemoteMoviesDataStore implements MoviesDataStore{
     }
 
     @Override
-    public LiveData<ApiResponse<MoviesDataDTO>> getPopularMoviesDataDTO(String apiKey, String language, Integer page) {
-        return apiInterface.getPopularMovies(apiKey, language, page);
-    }
-
-    @Override
-    public Observable<MoviesDataDTO> getTopRatedMoviesDataDTO(String apiKey, String language, Integer page) {
-        return apiInterface.getTopRatedMovies(apiKey, language, page);
-    }
-
-    @Override
-    public Observable<MovieDTO> getMovie(String apiKey, String language, int movieId) {
-        return apiInterface.getMovie(movieId,apiKey, language);
+    public LiveData<ApiResponse<MoviesDataDTO>> getMovies() {
+        return apiInterface.getMovies(API_KEY);
     }
 
 }

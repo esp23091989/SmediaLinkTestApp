@@ -12,6 +12,7 @@ import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.moviestestapplication.R;
+import com.example.moviestestapplication.domain.Movie;
 import com.example.moviestestapplication.presentation.di.components.DaggerMoviesAdapterComponent;
 import com.example.moviestestapplication.presentation.di.components.HasMoviesAdapterDepenedencies;
 import com.example.moviestestapplication.presentation.model.MovieModel;
@@ -29,12 +30,10 @@ import javax.inject.Inject;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> implements MoviesAdapterView{
 
-    private List<MovieModel> movies;
+    private List<Movie> movies;
     private final Activity activity;
     private final SimpleDateFormat dateFormat;
     private MvpDelegate<? extends MoviesAdapter> mMvpDelegate;
-    private MvpDelegate<?> parentDelegate;
-    HasMoviesAdapterDepenedencies parentComponent;
 
     @InjectPresenter
     @Inject
@@ -45,29 +44,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         return presenter;
     }
 
-    public MoviesAdapter(MvpDelegate<?> parentDelegate, Activity activity, List<MovieModel> movies) {
-        this.parentDelegate = parentDelegate;
+    public MoviesAdapter(Activity activity, List<Movie> movies) {
         this.activity = activity;
         this.movies = movies;
         dateFormat = new SimpleDateFormat("d MMM yy", Locale.ENGLISH);
 //        buildGraph();
-        getMvpDelegate().onCreate();
     }
 
-    private MvpDelegate getMvpDelegate() {
-        if(mMvpDelegate == null){
-            mMvpDelegate = new MvpDelegate<>(this);
-            mMvpDelegate.setParentDelegate(parentDelegate, "");
-        }
-        return mMvpDelegate;
-    }
-
-//    private void buildGraph() {
-//        DaggerMoviesAdapterComponent.builder()
-//                .hasMoviesAdapterDepenedencies(parentComponent)
-//                .build()
-//                .inject(this);
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -77,7 +60,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        MovieModel movie = movies.get(position);
+        Movie movie = movies.get(position);
         holder.tvTitle.setText(movie.getTitle());
         holder.tvVoteAverage.setText(String.valueOf(movie.getVoteAverage()));
         holder.tvDate.setText(getFormateDateString(movie.getReleaseDate()));
@@ -111,17 +94,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         return movies.size();
     }
 
-    public List<MovieModel> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<MovieModel> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
-        notifyDataSetChanged();
-    }
-
-    public void addMovies(List<MovieModel> data) {
-        this.movies.addAll(data);
         notifyDataSetChanged();
     }
 
@@ -137,11 +115,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         ViewHolder(View itemView) {
             super(itemView);
 
-            this.ivPoster = (ImageView) itemView.findViewById(R.id.ivPoster);
-            this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-            this.tvVoteAverage = (TextView) itemView.findViewById(R.id.tvVoteAverage);
-            this.tvDate = (TextView) itemView.findViewById(R.id.tvDate);
-            this.tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
+            this.ivPoster = itemView.findViewById(R.id.ivPoster);
+            this.tvTitle = itemView.findViewById(R.id.tvTitle);
+            this.tvVoteAverage = itemView.findViewById(R.id.tvVoteAverage);
+            this.tvDate = itemView.findViewById(R.id.tvDate);
+            this.tvOverview = itemView.findViewById(R.id.tvOverview);
         }
     }
 }

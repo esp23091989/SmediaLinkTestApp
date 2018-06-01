@@ -6,7 +6,7 @@
 //import com.example.moviestestapplication.data.api.ApiInterface;
 //import com.example.moviestestapplication.data.repository.datasource.MoviesDataStore;
 //import com.example.moviestestapplication.domain.repository.MovieRepository;
-//import com.example.moviestestapplication.domain.repository.MoviesDataRepository;
+//import com.example.moviestestapplication.domain.repository.MoviesRepository;
 //import com.example.moviestestapplication.presentation.di.modules.ApplicationModule;
 //import com.example.moviestestapplication.presentation.di.modules.CiceroneModule;
 //
@@ -28,7 +28,7 @@
 //    @Named("PostScheduler")
 //    Scheduler getPostScheduler();
 //
-//    MoviesDataRepository getMoviesDataRepository();
+//    MoviesRepository getMoviesDataRepository();
 //
 //    MovieRepository getMovieRepository();
 //
